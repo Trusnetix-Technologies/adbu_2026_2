@@ -7,6 +7,7 @@ import {
   Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import Link from "next/link";
 
 export default function MyAppBar() {
   return (
@@ -25,6 +26,12 @@ export default function MyAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             My Favourite Movies
           </Typography>
+          <Link href="/">
+            <Button color="inherit">Home</Button>
+          </Link>
+          <Link href="/blog">
+            <Button color="inherit">Blog</Button>
+          </Link>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>

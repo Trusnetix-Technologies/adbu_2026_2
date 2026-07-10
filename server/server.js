@@ -5,6 +5,7 @@ require("dotenv").config(); // Load Environment Variables. Make sure .env is in 
 
 const port = process.env.PORT;
 
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {})
   .then(() => {
@@ -18,6 +19,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Models
+require("./models/Movie");
+
+// Routes
 require("./routes/movieRoutes")(app);
 
 app.listen(port, () => {
