@@ -5,42 +5,38 @@ import { darkTheme, lightTheme } from "@/styles/mui/theme";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   CssBaseline,
   Grid,
   ThemeProvider,
   Typography,
 } from "@mui/material";
+import axios from "axios"; // npm i axios
 import Head from "next/head";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const movies = [
-    {
-      name: "Avengers",
-      img: "https://imgix.ranker.com/list_img_v2/18864/1998864/original/the-best-the-avengers-quotes",
-      desc: "Directed By Joss Whedon",
-    },
-    {
-      name: "Terminator",
-      img: "https://townsquare.media/site/295/files/2019/10/Terminator-Orion.jpg?w=1200&h=0&zc=1&s=0&a=t&q=89",
-      desc: "Directed By James Cameron",
-    },
-    {
-      name: "Inception",
-      img: "https://images5.alphacoders.com/112/1122037.jpg",
-      desc: "Directed By Chris Nolan",
-    },
-    {
-      name: "Jurassic Park",
-      img: "https://i.ytimg.com/vi/Rc_i5TKdmhs/maxresdefault.jpg",
-      desc: "Directed By Steven Spielberg",
-    },
-    {
-      name: "Superman",
-      img: "https://image.tmdb.org/t/p/original/3rGzY1RaVgWIP4GuOTwdHwHXSgM.jpg",
-      desc: "Directed by James Gunn",
-    },
-  ];
+  // useState Hook
+  const [visible, setVisible] = useState(true);
+  const [movies, setMovies] = useState(null);
+
+  // useEffect Hook
+  useEffect(() => {
+    fetchMovies();
+  }, [])
+
+  const fetchMovies = async () => {
+    try {
+      const response = await axios.get("/api/v1/get/movies");
+      console.log("response: ", response.data);
+
+      setMovies(response.data);
+    } catch (error) {
+      console.error("ERROR: ", error);
+    }
+  };
+
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -62,17 +58,23 @@ export default function Home() {
             }}
           >
             <center>
-              <Avatar
-                alt="Thanos by Josh Brolin"
-                src="https://www.ericjuneaubooks.com/wp-content/uploads/2023/02/thanos_marvel_square-300x300.jpg"
-                sx={{ width: 120, height: 120 }}
-              />
+              {visible ? (
+                <Avatar
+                  alt="Thanos by Josh Brolin"
+                  src="https://www.ericjuneaubooks.com/wp-content/uploads/2023/02/thanos_marvel_square-300x300.jpg"
+                  sx={{ width: 120, height: 120 }}
+                />
+              ) : (
+                <></>
+              )}
             </center>
           </Box>
           <center>
             <Typography variant="h4" gutterBottom>
               The List of Movies
             </Typography>
+            {/* <Button onClick={() => setVisible(!visible)}>Visible/Not Visible</Button> */}
+            {/* <Button onClick={() => fetchMovies()}>Fetch Movies</Button> */}
           </center>
 
           <Grid
@@ -80,11 +82,19 @@ export default function Home() {
             spacing={2}
             sx={{ marginBottom: "70px", marginTop: "70px" }}
           >
-            {movies.map((movie) => (
-              <Grid size={4}>
-                <CustomCard name={movie.name} img={movie.img} desc={movie.desc} />
-              </Grid>
-            ))}
+            {movies ? (
+              movies.response.map((movie, i) => (
+                <Grid size={4} key={i}>
+                  <CustomCard
+                    name={movie.name}
+                    img={movie.image}
+                    desc={movie.description}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <></>
+            )}
           </Grid>
         </Container>
       </ThemeProvider>
