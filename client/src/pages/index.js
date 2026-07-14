@@ -24,7 +24,7 @@ export default function Home() {
   // useEffect Hook
   useEffect(() => {
     fetchMovies();
-  }, [])
+  }, []);
 
   const fetchMovies = async () => {
     try {
@@ -84,11 +84,11 @@ export default function Home() {
           >
             {movies ? (
               movies.response.map((movie, i) => (
-                <Grid size={4} key={i}>
+                <Grid size={3} key={i}>
                   <CustomCard
-                    name={movie.name}
-                    img={movie.image}
-                    desc={movie.description}
+                    title={movie.title}
+                    imageUrl={movie.imageUrl}
+                    description={movie.description}
                   />
                 </Grid>
               ))

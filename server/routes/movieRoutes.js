@@ -21,18 +21,24 @@ module.exports = (app) => {
     console.log("ADD A NEW MOVIE");
 
     // Declare the data received in the body of the request
-    const { name, image, description } = req.body;
+    const { title, imageUrl, description, releaseYear, rating, genres, director, producer, duration } = req.body;
 
     try {
-      const movie = await Movie.findOne({ name }); // Check if the user already exists
+      const movie = await Movie.findOne({ title }); // Check if the user already exists
       if (movie) {
         res.status(400).json({ message: "Movie already exists!" });
       }
 
       movieFields = {
-        name,
-        image,
+        title,
+        imageUrl,
         description,
+        releaseYear,
+        rating,
+        genres,
+        director,
+        producer,
+        duration,
       };
 
       const response = await Movie.create(movieFields);
@@ -49,12 +55,12 @@ module.exports = (app) => {
 
     // Declare the data received in the body of the request
     const { id } = req.params;
-    const { name, image, description } = req.body;
+    const { title, imageUrl, description, releaseYear, rating, genres, director, producer, duration } = req.body;
 
     try {
       const response = await Movie.updateOne(
         { _id: id },
-        { name, image, description },
+        { title, imageUrl, description, releaseYear, rating, genres, director, producer, duration },
       );
 
       res.status(201).json({ message: "Updated: ", response });
