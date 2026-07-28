@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Movie = mongoose.model("movies");
 
+const requireLogin = require("../middleware/requireLogin");
+
 // HTTP REQUEST EXAMPLES(CRUD OPERATIONS): GET, POST, PUT, DELETE
 
 module.exports = (app) => {
@@ -17,7 +19,7 @@ module.exports = (app) => {
   });
 
   // POST REQUEST || Add a New Movie
-  app.post("/api/v1/add/movie", async (req, res) => {
+  app.post("/api/v1/add/movie", requireLogin, async (req, res) => {
     console.log("ADD A NEW MOVIE");
 
     // Declare the data received in the body of the request
@@ -70,7 +72,7 @@ module.exports = (app) => {
   });
   
   // DELETE REQUEST || Delete a Movie
-  app.delete("/api/v1/delete/movie/:id", async (req, res) => {
+  app.delete("/api/v1/delete/movie/:id", requireLogin, async (req, res) => {
     const { id } = req.params;
 
     try {

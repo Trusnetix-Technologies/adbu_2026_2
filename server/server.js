@@ -21,9 +21,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Models
 require("./models/Movie");
+require("./models/User");
 
 // Routes
 require("./routes/movieRoutes")(app);
+require("./routes/authRoutes")(app);
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
