@@ -21,7 +21,7 @@ export default function Home() {
   const [visible, setVisible] = useState(true);
   const [movies, setMovies] = useState(null);
 
-  // useEffect Hook
+  // useEffect Hook || Run code inside this at start up
   useEffect(() => {
     fetchMovies();
   }, []);
@@ -82,7 +82,7 @@ export default function Home() {
             spacing={2}
             sx={{ marginBottom: "70px", marginTop: "70px" }}
           >
-            {movies ? (
+            {movies && visible ? (
               movies.response.map((movie, i) => (
                 <Grid size={3} key={i}>
                   <CustomCard
