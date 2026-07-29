@@ -8,8 +8,24 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
+import { Cookies } from "react-cookie";
+import { useEffect, useState } from "react";
+
+const cookies = new Cookies();
 
 export default function MyAppBar() {
+  const [token, setToken] = useState();
+
+  useEffect(() => {
+    const token = cookies.get("token");
+    setToken(token);
+  }, []);
+
+  const handleLogout = () => {
+    cookies.remove("token");
+    window.location.href = "/login";
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -32,7 +48,16 @@ export default function MyAppBar() {
           <Link href="/blog">
             <Button color="inherit">Blog</Button>
           </Link>
-          <Button color="inherit">Login</Button>
+
+          {token ? (
+            <Button color="inherit" onClick={handleLogout}>
+              Log Out
+            </Button>
+          ) : (
+            <Button color="inherit" href="/login">
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

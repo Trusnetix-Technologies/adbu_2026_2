@@ -26,7 +26,7 @@ module.exports = (app) => {
     const { title, imageUrl, description, releaseYear, rating, genres, director, producer, duration } = req.body;
 
     try {
-      const movie = await Movie.findOne({ title }); // Check if the user already exists
+      const movie = await Movie.findOne({ title }); // Check if the movie already exists
       if (movie) {
         res.status(400).json({ message: "Movie already exists!" });
       }
