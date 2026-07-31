@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app_2026/screens/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:movie_app_2026/providers/movie_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => MovieProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
