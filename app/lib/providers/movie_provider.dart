@@ -15,6 +15,12 @@ class MovieProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
 
+  // authentication token
+  String? authToken;
+  void updateToken(String? token) {
+    authToken = token;
+  }
+
   // ============= FETCH ALL MOVIES ================
   Future<void> fetchMovies() async {
     _isLoading = true;
@@ -45,7 +51,10 @@ class MovieProvider extends ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/api/v1/add/movie'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
         body: json.encode(movie.toJson()),
       );
       if (response.statusCode == 201) {
@@ -63,7 +72,10 @@ class MovieProvider extends ChangeNotifier {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/v1/update/movie/$id'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
         body: json.encode(movie.toJson()),
       );
       if (response.statusCode == 201) {
@@ -81,6 +93,7 @@ class MovieProvider extends ChangeNotifier {
     try {
       final response = await http.delete(
         Uri.parse('$baseUrl/api/v1/delete/movie/$id'),
+        headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200) {
         await fetchMovies();

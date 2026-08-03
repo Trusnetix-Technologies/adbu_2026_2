@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app_2026/models/movie.dart';
+import 'package:movie_app_2026/providers/auth_provider.dart';
 import 'package:movie_app_2026/providers/movie_provider.dart';
+import 'package:movie_app_2026/screens/login_screen.dart';
 import 'package:movie_app_2026/widgets/movie_card.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,34 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Movies"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Movies"),
+        centerTitle: true,
+        actions: [
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, _) {
+              if (authProvider.isAuthenticated) {
+                return IconButton(
+                  onPressed: () => authProvider.logout(),
+                  icon: const Icon(Icons.logout_rounded),
+                  tooltip: "Logout",
+                );
+              } else {
+                return IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  },
+                  icon: Icon(Icons.login_rounded),
+                  tooltip: "Login",
+                );
+              }
+            },
+          ),
+        ],
+      ),
       body: Consumer<MovieProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {

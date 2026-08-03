@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app_2026/providers/auth_provider.dart';
 import 'package:movie_app_2026/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:movie_app_2026/providers/movie_provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => MovieProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider()..checkLoginStatus(),
+        ),
+
+        ChangeNotifierProxyProvider<AuthProvider, MovieProvider>(
+          create: (_) => MovieProvider(),
+          update: (_, auth, previousMovieProvider) =>
+              previousMovieProvider!..updateToken(auth.token),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
