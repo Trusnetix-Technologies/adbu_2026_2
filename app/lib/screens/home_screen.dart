@@ -3,6 +3,7 @@ import 'package:movie_app_2026/providers/auth_provider.dart';
 import 'package:movie_app_2026/providers/movie_provider.dart';
 import 'package:movie_app_2026/screens/login_screen.dart';
 import 'package:movie_app_2026/widgets/movie_card.dart';
+import 'package:movie_app_2026/widgets/movie_form_sheet.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,12 +28,54 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Movies"),
         centerTitle: true,
+        leading: Consumer<AuthProvider>(
+          builder: (context, authProvider, _) {
+            if (authProvider.isAuthenticated) {
+              return IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => const MovieFormSheet(),
+                  );
+                },
+                icon: Icon(Icons.add_rounded),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
         actions: [
           Consumer<AuthProvider>(
             builder: (context, authProvider, _) {
               if (authProvider.isAuthenticated) {
                 return IconButton(
-                  onPressed: () => authProvider.logout(),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text("Logout"),
+                        content: const Text(
+                          "Are you sure you want to log out?",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx),
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                              authProvider.logout();
+                            },
+                            child: Text("Logout"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.logout_rounded),
                   tooltip: "Logout",
                 );

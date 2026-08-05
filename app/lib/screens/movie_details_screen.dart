@@ -2,6 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:movie_app_2026/models/movie.dart';
+import 'package:movie_app_2026/providers/auth_provider.dart';
+import 'package:movie_app_2026/providers/movie_provider.dart';
+import 'package:movie_app_2026/widgets/movie_form_sheet.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final Movie movie;
@@ -11,7 +15,74 @@ class MovieDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(movie.title)),
+      appBar: AppBar(
+        title: Text(movie.title),
+        centerTitle: false,
+        actions: [
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, _) {
+              if (authProvider.isAuthenticated) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (_) => MovieFormSheet(movie: movie),
+                        );
+                      },
+                      icon: Icon(Icons.edit_rounded),
+                      tooltip: "Edit Movie",
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text("Delete Movie"),
+                            content: Text(
+                              "Are you sure you want to delete ${movie.title}?",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(ctx);
+                                  if (movie.id != null) {
+                                    await Provider.of<MovieProvider>(
+                                      context,
+                                      listen: false,
+                                    ).deleteMovie(movie.id!);
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
+                                  }
+                                },
+                                child: Text("Delete Movie"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.delete_rounded),
+                      tooltip: "Delete Movie",
+                    ),
+                  ],
+                );
+              }
+
+              return SizedBox.shrink();
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

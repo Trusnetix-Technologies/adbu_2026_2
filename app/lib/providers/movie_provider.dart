@@ -53,7 +53,7 @@ class MovieProvider extends ChangeNotifier {
         Uri.parse('$baseUrl/api/v1/add/movie'),
         headers: {
           'Content-Type': 'application/json',
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
+          'Authorization': ?authToken,
         },
         body: json.encode(movie.toJson()),
       );
@@ -74,7 +74,7 @@ class MovieProvider extends ChangeNotifier {
         Uri.parse('$baseUrl/api/v1/update/movie/$id'),
         headers: {
           'Content-Type': 'application/json',
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
+          'Authorization': ?authToken,
         },
         body: json.encode(movie.toJson()),
       );
@@ -89,11 +89,11 @@ class MovieProvider extends ChangeNotifier {
   }
 
   // ============= DELETE MOVIE ============================
-  Future<void> deleteMovie(String id, Movie movie) async {
+  Future<void> deleteMovie(String id) async {
     try {
       final response = await http.delete(
         Uri.parse('$baseUrl/api/v1/delete/movie/$id'),
-        headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
+        headers: {'Authorization': ?authToken},
       );
       if (response.statusCode == 200) {
         await fetchMovies();
